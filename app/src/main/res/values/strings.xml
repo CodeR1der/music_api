@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">music_apk</string>
+    <string name="error_loading_artist">Ошибка загрузки артиста</string>
+</resources>
