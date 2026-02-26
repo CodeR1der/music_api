@@ -1,0 +1,38 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout код
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'          # ускоряет билд в 2-3 раза
+
+      - name: Делаем gradlew исполняемым
+        run: chmod +x gradlew
+
+      - name: Собираем проект (тесты + lint)
+        run: ./gradlew build
+
+      - name: Собираем Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Загружаем APK (артефакт)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30   # сколько дней хранить
